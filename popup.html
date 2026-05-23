@@ -5,42 +5,129 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WatchLater Zap</title>
   <link rel="stylesheet" href="css/popup.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <header>
       <div class="logo">
-        <img src="icons/icon48.png" alt="WatchLater Zap logo" width="32" height="32">
-        <h1>WatchLater Zap</h1>
-      </div>
-      <p class="subtitle">One-click cleanup for your Watch Later playlist</p>
-    </header>
-    
-    <main>
-      <div class="content">
-        <p id="instructions">Navigate to your YouTube Watch Later playlist, then click the button below to remove all videos.</p>
-        
-        <button id="zap-btn" class="primary-btn">
-          <span class="btn-text">Delete All Videos</span>
-        </button>
-        
-        <div id="progress" class="hidden">
-          <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-          </div>
-          <p id="status">Processing...</p>
+        <img src="icons/icon48.png" alt="" width="28" height="28" aria-hidden="true">
+        <div>
+          <h1>WatchLater Zap</h1>
+          <p class="subtitle">Clean up your Watch Later playlist</p>
         </div>
-        
-        <p id="error" class="error hidden"></p>
       </div>
+    </header>
+
+    <section id="onboarding" class="card onboarding hidden" aria-label="Getting started">
+      <p class="onboarding-label">Getting started</p>
+      <ol class="onboarding-steps">
+        <li>Open your YouTube Watch Later playlist</li>
+        <li>Review how many videos are queued</li>
+        <li>Confirm and clear them all in one go</li>
+      </ol>
+      <button id="dismiss-onboarding" class="secondary-btn">Got it</button>
+    </section>
+
+    <main>
+      <section id="wrong-page" class="card state-panel hidden" aria-live="polite">
+        <div class="state-icon" aria-hidden="true">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.75"/>
+            <path d="M8 9h8M8 12.5h8M8 16h5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2>Not on Watch Later</h2>
+        <p class="state-copy">Open your YouTube Watch Later playlist to see your queue and clear it.</p>
+        <a id="open-wl-link" class="primary-btn link-btn" href="https://www.youtube.com/playlist?list=WL" target="_blank" rel="noopener">
+          Open Watch Later
+        </a>
+      </section>
+
+      <section id="ready-state" class="card state-panel hidden" aria-live="polite">
+        <div class="stats-grid">
+          <div class="stat">
+            <span class="stat-value" id="video-count">-</span>
+            <span class="stat-label">videos queued</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="eta-estimate">-</span>
+            <span class="stat-label">estimated time</span>
+          </div>
+        </div>
+        <p class="count-hint">
+          <svg class="hint-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.25"/>
+            <path d="M8 7v4M8 5.25v.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+          </svg>
+          Large playlists load as you scroll. Scroll your playlist, then refresh the count.
+        </p>
+        <p class="state-copy">Ready when you are. This removes every video from Watch Later and cannot be undone.</p>
+        <button id="zap-btn" class="primary-btn">
+          <svg class="btn-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M9 1.5 4.5 9H8L6.5 14.5 12.5 7.5H9l1.5-6z" fill="currentColor"/>
+          </svg>
+          <span class="btn-text">Clear All Videos</span>
+        </button>
+        <button id="refresh-count" class="text-btn">Refresh count</button>
+      </section>
+
+      <section id="confirm-state" class="card state-panel hidden" aria-live="polite">
+        <div class="state-icon warn" aria-hidden="true">
+          <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" fill="none">
+            <path d="M12 4.5 20.5 19.5H3.5L12 4.5z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+            <path d="M12 10v4M12 16.5v.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2>Are you sure?</h2>
+        <p class="state-copy">You're about to remove <strong id="confirm-count">0</strong> videos from Watch Later. This action is permanent.</p>
+        <label class="confirm-check">
+          <input type="checkbox" id="confirm-checkbox">
+          <span>I understand this cannot be undone</span>
+        </label>
+        <div class="btn-row">
+          <button id="cancel-confirm" class="secondary-btn">Go back</button>
+          <button id="confirm-delete" class="danger-btn" disabled>Yes, clear all</button>
+        </div>
+      </section>
+
+      <section id="progress-state" class="card state-panel hidden" aria-live="polite">
+        <div class="progress-ring-wrap">
+          <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="progress-ring-track" cx="60" cy="60" r="52"></circle>
+            <circle class="progress-ring-fill" id="progress-ring-fill" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <div class="progress-ring-label">
+            <span class="progress-percent" id="progress-percent">0%</span>
+          </div>
+        </div>
+        <p class="status-title" id="status-title">Clearing playlist...</p>
+        <p class="status-detail" id="status-detail">0 of 0 removed</p>
+        <p class="status-eta" id="status-eta"></p>
+        <button id="cancel-btn" class="secondary-btn">Cancel</button>
+      </section>
+
+      <section id="complete-state" class="card state-panel hidden" aria-live="polite">
+        <div class="complete-icon" id="complete-icon" aria-hidden="true">
+          <svg viewBox="0 0 52 52" width="52" height="52">
+            <circle class="complete-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="complete-check" fill="none" d="M14 27l8 8 16-16"/>
+          </svg>
+        </div>
+        <h2>Playlist cleared</h2>
+        <p class="state-copy" id="complete-message">All done.</p>
+        <button id="done-btn" class="primary-btn">Done</button>
+      </section>
+
+      <p id="error" class="error-banner hidden" role="alert"></p>
     </main>
-    
+
     <footer>
-      <p>Made with ♥ for YouTube power users</p>
+      <a id="privacy-link" href="PRIVACY.md" target="_blank" rel="noopener">Privacy</a>
+      <span aria-hidden="true">|</span>
+      <span>v2.6.0</span>
     </footer>
   </div>
-  
+
   <script src="js/popup.js"></script>
 </body>
-</html> 
+</html>

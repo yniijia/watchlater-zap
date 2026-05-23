@@ -1,13 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
-  <!-- Background Circle -->
-  <circle cx="64" cy="64" r="60" fill="#1a73e8" />
-  
-  <!-- Inner Circle (lighter) -->
-  <circle cx="64" cy="64" r="50" fill="#1557b0" />
-  
-  <!-- "ZAP" Lightning Icon -->
-  <path d="M64 20 L44 64 L64 64 L48 108 L84 64 L64 64 L84 20 Z" fill="white" />
-  
-  <!-- Optional: Add a subtle shadow effect -->
-  <circle cx="64" cy="64" r="60" fill="rgba(0,0,0,0.1)" filter="blur(4px)" style="transform: translateY(4px);" />
-</svg> 
+  <defs>
+    <linearGradient id="bg" x1="24" y1="16" x2="104" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f06b5a"/>
+      <stop offset="1" stop-color="#d14a3a"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="64" y1="20" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <ellipse cx="64" cy="42" rx="38" ry="24" fill="url(#shine)"/>
+  <path d="M68 24 46 68h18l-12 36 38-44H72l12-36z" fill="#fff"/>
+</svg>

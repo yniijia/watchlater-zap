@@ -1,12 +1,22 @@
 {
   "manifest_version": 3,
   "name": "WatchLater Zap",
-  "version": "2.05.25",
+  "version": "2.6.0",
   "description": "Delete all YouTube Watch Later videos in one click.",
   "author": "Tony Fiston",
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "storage"],
   "host_permissions": [
     "https://www.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/playlist*"],
+      "js": ["js/content.js"],
+      "run_at": "document_idle"
+    }
   ],
   "action": {
     "default_popup": "popup.html",
@@ -21,4 +31,4 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   }
-} 
+}

@@ -18,6 +18,7 @@ zip -r "$NAME.zip" \
   icons/icon16.png \
   icons/icon48.png \
   icons/icon128.png \
+  PRIVACY.md \
   README.md
 
 echo "Package created: $NAME.zip"
